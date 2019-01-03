@@ -29,7 +29,6 @@ export const GlobalStyle = createGlobalStyle`
 	  
 	.App {
 		width: 600px;
-		height: 370px;
 		font-family: 'Poppins', sans-serif;
 		background-color: #fff;
 	}

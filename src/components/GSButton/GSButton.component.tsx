@@ -2,11 +2,12 @@ import React from 'react'
 import styled from 'styled-components';
 
 interface IProps {
+	type: string;
 	label: string;
 	action(): void;
 }
 
-const GSButtonAction = styled.button`
+const GSButtonActionPrimary = styled.button`
 	padding: .6rem 1.5rem;
 	color: ${ props => props.theme.light }
 	background-color: ${ props => props.theme.primary }
@@ -14,17 +15,49 @@ const GSButtonAction = styled.button`
 	font-weight: 600;
 	cursor: pointer;
 	transition: 100ms all ease-in-out;
+	border: ${ props => props.theme.primary } 2px solid;
 
 	&:hover {
-		background-color: ${ props => props.theme.primaryDark }
+		background-color: ${ props => props.theme.primaryDark };
+		border-color: ${ props => props.theme.primaryDark };
+	}
+`
+
+const GSButtonActionSecondary = styled.button`
+	padding: .6rem 1.5rem;
+	color: ${ props => props.theme.dark }
+	background-color: transparent;
+	border-radius: 4px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: 100ms all ease-in-out;
+	border: ${ props => props.theme.dark } 2px solid;
+
+	&:hover {
+		background-color: ${ props => props.theme.dark }
+		color: ${ props => props.theme.light }
 	}
 `
 
 const GSButton: React.SFC<IProps> = (props) => {
+
 	return (
-		<GSButtonAction onClick={props.action}>
-			{props.label}
-		</GSButtonAction>
+		<React.Fragment>
+			{
+				props.type === 'primary' &&
+				<GSButtonActionPrimary onClick={props.action}>
+					{props.label}
+				</GSButtonActionPrimary>
+			}
+
+			{
+				props.type === 'secondary' &&
+				<GSButtonActionSecondary onClick={props.action}>
+					{props.label}
+				</GSButtonActionSecondary>
+			}
+
+		</React.Fragment>
 	)
 }
 

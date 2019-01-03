@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 import GSLogo from './../GSLogo/GSLogo.component';
 import GSButton from '../GSButton/GSButton.component';
+import { IButtonConfig } from '../../interfaces';
 
 interface IProps {
 	appName: string;
-	buttonLabel: string;
-	buttonAction(): void;
+	actionsConfig: IButtonConfig;
 }
 
 const GSHeaderContainer = styled.div`
@@ -21,15 +21,16 @@ const GSHeaderContainer = styled.div`
 `
 
 const GSHeader: React.SFC<IProps> = (props) => {
+
 	return (
 		<GSHeaderContainer>
 			<GSLogo appName={props.appName} />
 
 			<GSButton 
-				label={props.buttonLabel}
-				action={props.buttonAction}
+				type={props.actionsConfig.type}
+				label={props.actionsConfig.label} 
+				action={props.actionsConfig.action}
 			/>
-
 		</GSHeaderContainer>
 	)
 }
