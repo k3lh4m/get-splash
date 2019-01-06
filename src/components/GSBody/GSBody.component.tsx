@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import GSWelcome from '../GSWelcome/GSWelcome.component';
 import GSButton from '../GSButton/GSButton.component';
 
-import { IButtonConfig } from './../../interfaces'
+import { IButtonConfig, IUnsplahPhotos } from './../../interfaces'
+import GSImageList from '../GSImageList/GSImageList.component';
 
 interface IProps {
 	isWelcomeActive: boolean;
+	images: IUnsplahPhotos[] | null;
 	actionsConfig: IButtonConfig[];
 }
 
@@ -63,7 +65,9 @@ const GSBody: React.SFC<IProps> = (props) => {
 		
 					</GSWelcome>
 				) : (
-					<span>is not active</span>
+					<GSImageList
+						images={props.images}
+					/>
 				)
 			}
 		</BodyWrapper>

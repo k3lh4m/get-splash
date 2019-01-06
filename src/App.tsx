@@ -1,6 +1,7 @@
 import React             from 'react';
 import { ThemeProvider } from 'styled-components'
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 import { theme, GlobalStyle } from './theme/globalStyle'
 import { IUnsplahPhotos, IButtonConfig } from './interfaces';
@@ -19,7 +20,9 @@ interface IProps {}
 interface IState {
 	loadingPhotos: boolean;
 	isWelcomeActive: boolean;
-	photos: IUnsplahPhotos|null
+	photos: IUnsplahPhotos[]|null;
+	resultsPerPage: number;
+	updatingCounter: boolean;
 }
 
 class App extends React.Component<IProps, IState> {
@@ -30,18 +33,22 @@ class App extends React.Component<IProps, IState> {
 			loadingPhotos: false,
 			isWelcomeActive: true,
 			photos: null,
+			resultsPerPage: 0,
+			updatingCounter: false,
 		}
 
-		this.getPhotos = this.getPhotos.bind(this);
-		this.goToUnsplash = this.goToUnsplash.bind(this)
+		this.getPhotos = debounce(this.getPhotos.bind(this), 1500);
+		this.goToUnsplash = this.goToUnsplash.bind(this);
+		this.updateResultsPerPage = this.updateResultsPerPage.bind(this);
+		this.getLabelLabel = this.getLabelLabel.bind(this);
 	}
 
 	render() {
 		const actionsConfig: IButtonConfig[] = [
 			{
-				label: 'Get Photos',
+				label: this.getLabelLabel(),
 				type: 'primary',
-				action: this.getPhotos,
+				action: this.updateResultsPerPage,
 			}, 
 			{
 				label: 'Unsplash',
@@ -60,6 +67,7 @@ class App extends React.Component<IProps, IState> {
 						/>
 
 						<GSBody
+							images={this.state.photos}
 							isWelcomeActive={this.state.isWelcomeActive}
 							actionsConfig={actionsConfig}
 						/>
@@ -73,15 +81,15 @@ class App extends React.Component<IProps, IState> {
 	}
 
 	protected getPhotos() {
-		console.log('hello');
 
 		this.setState({
 			loadingPhotos: true,
 			isWelcomeActive: false,
+			updatingCounter: false,
 		}, () => {
-			axios.get(`https://api.unsplash.com/photos/?client_id=${unsplash_client}&per_page=1`)
+			axios.get(`https://api.unsplash.com/photos/?client_id=${unsplash_client}&per_page=${this.state.resultsPerPage}`)
 				.then((data) => {
-					const photos: IUnsplahPhotos = data.data;
+					const photos: IUnsplahPhotos[] = data.data;
 
 					this.setState({
 						photos,
@@ -94,8 +102,32 @@ class App extends React.Component<IProps, IState> {
 		})
 	}
 
-	protected goToUnsplash() {
+	protected goToUnsplash(): void {
 		window.location.href = 'https://unsplash.com/'
+	}
+
+	protected updateResultsPerPage(): void {
+		this.setState({
+			resultsPerPage: this.state.resultsPerPage + 1,
+			updatingCounter: true,
+		}, () => {
+			const click = debounce(this.getPhotos, 1000);
+			click();
+		})
+	}
+
+	protected getLabelLabel(): string {
+		if (
+			this.state.resultsPerPage === 0 
+		) {
+			return 'Get Photos';
+		} else if (
+			this.state.resultsPerPage === 1
+		) {
+			return `Get ${this.state.resultsPerPage} Photos`	
+		} else {
+			return `Get ${this.state.resultsPerPage} Photos`	
+		}
 	}
 }
 
