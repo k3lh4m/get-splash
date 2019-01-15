@@ -8,7 +8,7 @@ interface IProps {
 
 const GSAuthorContainer = styled.div`
 	display: flex;
-	padding: 12px 12px;
+	padding: 12px;
 	box-sizing: border-box;
 	width: 100%;
 	align-items: center;

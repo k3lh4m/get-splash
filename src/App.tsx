@@ -41,6 +41,7 @@ class App extends React.Component<IProps, IState> {
 		this.goToUnsplash = this.goToUnsplash.bind(this);
 		this.updateResultsPerPage = this.updateResultsPerPage.bind(this);
 		this.getLabelLabel = this.getLabelLabel.bind(this);
+		this.copyImageLinkToClipboard = this.copyImageLinkToClipboard.bind(this);
 	}
 
 	render() {
@@ -70,6 +71,7 @@ class App extends React.Component<IProps, IState> {
 							images={this.state.photos}
 							isWelcomeActive={this.state.isWelcomeActive}
 							actionsConfig={actionsConfig}
+							copyImageUrlAction={this.copyImageLinkToClipboard}
 						/>
 
 					</div>
@@ -124,10 +126,26 @@ class App extends React.Component<IProps, IState> {
 		} else if (
 			this.state.resultsPerPage === 1
 		) {
-			return `Get ${this.state.resultsPerPage} Photos`	
+			return `Getting ${this.state.resultsPerPage} Photo`	
 		} else {
-			return `Get ${this.state.resultsPerPage} Photos`	
+			return `Getting ${this.state.resultsPerPage} Photos`	
 		}
+	}
+
+	protected copyImageLinkToClipboard(val: string) {
+		console.log('val', val)
+
+		let selBox = document.createElement('textarea');
+		selBox.style.position = 'fixed';
+		selBox.style.left = '0';
+		selBox.style.top = '0';
+		selBox.style.opacity = '0';
+		selBox.value = val;
+    	document.body.appendChild(selBox);
+    	selBox.focus();
+    	selBox.select();
+    	document.execCommand('copy');
+    	document.body.removeChild(selBox);
 	}
 }
 

@@ -11,6 +11,7 @@ interface IProps {
 	isWelcomeActive: boolean;
 	images: IUnsplahPhotos[] | null;
 	actionsConfig: IButtonConfig[];
+	copyImageUrlAction(val: string): void;
 }
 
 const BodyWrapper = styled.div`
@@ -67,6 +68,7 @@ const GSBody: React.SFC<IProps> = (props) => {
 				) : (
 					<GSImageList
 						images={props.images}
+						copyImageUrlAction={props.copyImageUrlAction}
 					/>
 				)
 			}
