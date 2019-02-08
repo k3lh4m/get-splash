@@ -3,18 +3,24 @@ import styled from 'styled-components';
 import { IUnsplahPhotos } from '../../interfaces';
 import GSImage from '../GSImage/GSImage.component';
 
-import  "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-
 import Slider from "react-slick";
+
+import  "slick-carousel/slick/slick.css";
+import  "slick-carousel/slick/slick-theme.css";
+
+import "./../../styles/slick.css"
 
 interface IProps {
 	images: IUnsplahPhotos[] |null;
 	copyImageUrlAction(val: string): void;
 }
 
-const SlickContainer = styled.div`
+const SlickImageContainer = styled.div`
 	margin-right: 10px;
+`
+
+const SlickSliderWrapper = styled.div`
+	
 `
 
 const GSImageList: React.SFC<IProps> = (props) => {
@@ -24,7 +30,7 @@ const GSImageList: React.SFC<IProps> = (props) => {
 		dots: false,
 		infinite: true,
 		speed: 500,
-		slidesToShow: 3,
+		slidesToShow: 2,
 		slidesToScroll: 1,
 		variableWidth: true,
 		centerPadding: '50px',
@@ -32,22 +38,24 @@ const GSImageList: React.SFC<IProps> = (props) => {
 
 	return (
 		<React.Fragment>
-			<Slider {...settings}>
-				{
-					props.images &&
-					props.images.map((data, index) => {
-						return (
-							<SlickContainer key={index}>
-								<GSImage 
-									imageUrl={data.urls} 	
-									imageUser={data.user}
-									copyImageUrlAction={props.copyImageUrlAction}
-								/>
-							</SlickContainer>
-						)
-					})
-				}
-			</Slider>
+			<SlickSliderWrapper>
+				<Slider {...settings} className="slick-override">
+					{
+						props.images &&
+						props.images.map((data, index) => {
+							return (
+								<SlickImageContainer key={index}>
+									<GSImage 
+										imageUrl={data.urls} 	
+										imageUser={data.user}
+										copyImageUrlAction={props.copyImageUrlAction}
+									/>
+								</SlickImageContainer>
+							)
+						})
+					}
+				</Slider>
+			</SlickSliderWrapper>
 		</React.Fragment>
 	)
 }
