@@ -5,3 +5,7 @@
 .slick-slider.slick-initialized {
 	display: block;
 }
+
+.slick-slide > div:first-of-type {
+	display: flex;
+}

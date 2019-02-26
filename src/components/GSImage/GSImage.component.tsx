@@ -62,7 +62,7 @@ const GSImageHidden = styled.img`
 const GSImage: React.SFC<IProps> = (props) => {
 
 	return (
-		<GSImageContainer backgroundImage={props.imageUrl.regular}>
+		<GSImageContainer backgroundImage={props.imageUrl.small}>
 			<GSImageAuthorContainer>
 				<GSAuthor 
 					userImageURL={props.imageUser.profile_image.small} 

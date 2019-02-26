@@ -1,79 +1,93 @@
-import React             from 'react';
-import { ThemeProvider } from 'styled-components'
-import axios from 'axios';
-import { debounce } from 'lodash';
+import React                     from 'react';
+import styled, { ThemeProvider } from 'styled-components'
+import axios                     from 'axios';
+import { debounce }              from 'lodash';
 
-import { theme, GlobalStyle } from './theme/globalStyle'
-import { IUnsplahPhotos, IButtonConfig } from './interfaces';
+import { theme, GlobalStyle }           from './theme/globalStyle'
 
-import GSHeader               from './components/GSHeader/GSHeader.component';
+import GSHeader             from './components/GSHeader/GSHeader.component';
 import GSBody               from './components/GSBody/GSBody.component';
-import { unsplash_client } from './const/unsplash.const';
+import LoadingSpinner       from './components/LoadingSpinner/LoadingSpinner.component';
 
-
-interface IPhotos {
-
-}
+import { IUnsplahPhotos, IButtonConfig } from './interfaces';
+import { unsplash_client }               from './const/unsplash.const';
 
 interface IProps {}
+
+const BodyWrapper = styled.div`
+	padding: 1rem;
+	min-height: 225px;
+	position: relative;
+`
 
 interface IState {
 	loadingPhotos: boolean;
 	isWelcomeActive: boolean;
-	photos: IUnsplahPhotos[]|null;
+	photos: IUnsplahPhotos[];
 	resultsPerPage: number;
 	updatingCounter: boolean;
+	isSearchState: boolean;
 }
 
 class App extends React.Component<IProps, IState> {
+
 	constructor(props: IProps) {
 		super(props)
 
 		this.state = {
 			loadingPhotos: false,
 			isWelcomeActive: true,
-			photos: null,
+			photos: [],
 			resultsPerPage: 0,
 			updatingCounter: false,
+			isSearchState: false,
 		}
 
-		this.getPhotos = debounce(this.getPhotos.bind(this), 1500);
+		this.getPhotos = debounce(this.getPhotos.bind(this), 1000);
 		this.goToUnsplash = this.goToUnsplash.bind(this);
+		this.triggerSearchView = this.triggerSearchView.bind(this);
 		this.updateResultsPerPage = this.updateResultsPerPage.bind(this);
 		this.getLabelLabel = this.getLabelLabel.bind(this);
 		this.copyImageLinkToClipboard = this.copyImageLinkToClipboard.bind(this);
 	}
 
 	render() {
-		const actionsConfig: IButtonConfig[] = [
-			{
-				label: this.getLabelLabel(),
-				type: 'primary',
-				action: this.updateResultsPerPage,
-			}, 
-			{
-				label: 'Unsplash',
-				type: 'secondary',
-				action: this.goToUnsplash,
-			}
-		]
+		const labelLink: IButtonConfig = {
+			label: this.getLabelLabel(),
+			type: 'primary',
+			action: this.updateResultsPerPage,
+		}
 
+		const searchButton: IButtonConfig = {
+			label: 'Search Photos',
+			type: 'secondary',
+			action: this.goToUnsplash,
+		}
+		
 		return (
 			<ThemeProvider theme={theme}>
 				<React.Fragment>
 					<div className="App">
 						<GSHeader 
 							appName="Get Splash" 
-							actionsConfig={actionsConfig[0]}
+							actionsConfig={labelLink}
 						/>
 
-						<GSBody
-							images={this.state.photos}
-							isWelcomeActive={this.state.isWelcomeActive}
-							actionsConfig={actionsConfig}
-							copyImageUrlAction={this.copyImageLinkToClipboard}
-						/>
-
+						<BodyWrapper>
+							{
+								this.state.loadingPhotos ? (
+									<LoadingSpinner />
+								) : (
+									<GSBody
+										images={this.state.photos}
+										isWelcomeActive={this.state.isWelcomeActive}
+										getPhotosButton={labelLink}
+										showSearchButton={searchButton}
+										copyImageUrlAction={this.copyImageLinkToClipboard}
+									/>
+								)
+							}
+						</BodyWrapper>
 					</div>
 
 					<GlobalStyle />
@@ -105,7 +119,13 @@ class App extends React.Component<IProps, IState> {
 	}
 
 	protected goToUnsplash(): void {
-		window.location.href = 'https://unsplash.com/'
+		this.setState({
+			isSearchState: true,
+		})
+	}
+
+	protected triggerSearchView(): void {
+		console.log('trigger search');
 	}
 
 	protected updateResultsPerPage(): void {
@@ -114,15 +134,23 @@ class App extends React.Component<IProps, IState> {
 			updatingCounter: true,
 		}, () => {
 			const click = debounce(this.getPhotos, 1000);
+
 			click();
 		})
 	}
 
 	protected getLabelLabel(): string {
 		if (
+			!this.state.loadingPhotos &&
+			this.state.photos.length 
+		) {
+			return `Loaded ${this.state.resultsPerPage} Photos`
+		}
+
+		if (
 			this.state.resultsPerPage === 0 
 		) {
-			return 'Get Photos';
+			return 'Get Top Photos';
 		} else if (
 			this.state.resultsPerPage === 1
 		) {
@@ -133,19 +161,21 @@ class App extends React.Component<IProps, IState> {
 	}
 
 	protected copyImageLinkToClipboard(val: string) {
-		console.log('val', val)
-
 		let selBox = document.createElement('textarea');
+
 		selBox.style.position = 'fixed';
 		selBox.style.left = '0';
 		selBox.style.top = '0';
 		selBox.style.opacity = '0';
 		selBox.value = val;
-    	document.body.appendChild(selBox);
-    	selBox.focus();
-    	selBox.select();
-    	document.execCommand('copy');
-    	document.body.removeChild(selBox);
+
+		document.body.appendChild(selBox);
+
+		selBox.focus();
+		selBox.select();
+
+		document.execCommand('copy');
+		document.body.removeChild(selBox);
 	}
 }
 

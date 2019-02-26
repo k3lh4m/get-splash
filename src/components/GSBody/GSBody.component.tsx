@@ -6,17 +6,17 @@ import GSButton from '../GSButton/GSButton.component';
 
 import { IButtonConfig, IUnsplahPhotos } from './../../interfaces'
 import GSImageList from '../GSImageList/GSImageList.component';
+import GSImage from '../GSImage/GSImage.component';
 
 interface IProps {
 	isWelcomeActive: boolean;
-	images: IUnsplahPhotos[] | null;
-	actionsConfig: IButtonConfig[];
+	images: IUnsplahPhotos[];
+	getPhotosButton: IButtonConfig;
+	showSearchButton: IButtonConfig;
 	copyImageUrlAction(val: string): void;
 }
 
-const BodyWrapper = styled.div`
-	padding: 1rem;
-`
+
 
 const WelcomeMessageTitle = styled.h3`
 	font-size: 1.25rem;
@@ -39,9 +39,8 @@ const ButtonWrapper = styled.div`
 
 const GSBody: React.SFC<IProps> = (props) => {
 	
-
 	return (
-		<BodyWrapper>
+		<React.Fragment>
 			{
 				props.isWelcomeActive ? (
 					<GSWelcome>
@@ -50,29 +49,44 @@ const GSBody: React.SFC<IProps> = (props) => {
 						<WelcomeMessageContent>Authors are always credited and you are able to download or copy the photo directly to you clipboard.</WelcomeMessageContent>
 						
 						<ButtonWrapper>
-							{
-								props.actionsConfig.map((data, index) => {
-									return (
-										<GSButton 
-											key={index}
-											type={data.type}
-											label={data.label} 
-											action={data.action}
-										/>
-									)
-								})
-							}
+							<GSButton 
+								type={props.getPhotosButton.type}
+								label={props.getPhotosButton.label} 
+								action={props.getPhotosButton.action}
+							/>
+
+							<GSButton 
+								type={props.showSearchButton.type}
+								label={props.showSearchButton.label} 
+								action={props.showSearchButton.action}
+							/>
 						</ButtonWrapper>
 		
 					</GSWelcome>
 				) : (
-					<GSImageList
-						images={props.images}
-						copyImageUrlAction={props.copyImageUrlAction}
-					/>
+					<React.Fragment>
+
+						{
+							props.images.length > 1 &&
+							<GSImageList
+								images={props.images}
+								copyImageUrlAction={props.copyImageUrlAction}
+							/>
+						}
+
+						{
+							props.images.length === 1 && 
+							<GSImage 
+								imageUrl={props.images[0].urls} 	
+								imageUser={props.images[0].user}
+								copyImageUrlAction={props.copyImageUrlAction}
+							/>
+						}
+
+					</React.Fragment>
 				)
 			}
-		</BodyWrapper>
+		</React.Fragment>
 	)
 }
 
