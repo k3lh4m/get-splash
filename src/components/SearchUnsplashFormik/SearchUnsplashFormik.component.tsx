@@ -55,6 +55,7 @@ const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
 								type="text" 
 								name="searchQuery"
 								placeholder="Search Unsplash"
+								autocomplete={false}
 								onChange={inputProps.handleChange}
 							/>
 
@@ -64,7 +65,7 @@ const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
 								active={true}
 								disabled={props.isLoading}
 							>
-								<ArrowRightAlt />					
+								<ArrowRightAlt />
 							</GSButtonActionSearch>
 
 							<GSButtonActionSearch 

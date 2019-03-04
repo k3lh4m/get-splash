@@ -5,6 +5,7 @@ interface IProps {
 	type: string;
 	placeholder: string;
 	name: string;
+	autocomplete: boolean;
 	onChange(event: any): void;
 }
 
@@ -29,6 +30,7 @@ const GSInput: React.StatelessComponent<IProps> = (props) => {
 			placeholder={props.placeholder}
 			type={props.type}
 			name={props.name}
+			autoComplete={ props.autocomplete ? 'on' : 'off'}
 			onChange={props.onChange}
 		/>
 	)
