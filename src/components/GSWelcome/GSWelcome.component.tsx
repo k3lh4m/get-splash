@@ -4,9 +4,9 @@ interface IProps {}
 
 const GSWelcome: React.SFC<IProps> = (props) => {
 	return (
-		<React.Fragment>
+		<div style={{ padding: '16px' }}>
 			{props.children}
-		</React.Fragment>
+		</div>
 	)
 }
 

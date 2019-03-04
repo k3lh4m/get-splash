@@ -1,9 +1,15 @@
 import React from 'react'
 import styled from 'styled-components';
 
+import { Search, ArrowRight } from '@material-ui/icons';
+
+
+import { GSButtonActionSearch } from './../shared/GSSearchButton/GSSearchButton.component';
+
 interface IProps {
 	type: string;
 	label: string;
+	isActive?: boolean;
 	action(): void;
 }
 
@@ -55,6 +61,13 @@ const GSButton: React.SFC<IProps> = (props) => {
 				<GSButtonActionSecondary onClick={props.action}>
 					{props.label}
 				</GSButtonActionSecondary>
+			}
+
+			{
+				props.type === 'search' &&
+				<GSButtonActionSearch spacer={10} onClick={props.action}>
+					<Search />					
+				</GSButtonActionSearch>
 			}
 
 		</React.Fragment>

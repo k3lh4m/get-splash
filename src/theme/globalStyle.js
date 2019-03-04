@@ -32,6 +32,12 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: 'Poppins', sans-serif;
 		background-color: #fff;
 	}
+
+	input {
+		font-family: 'Poppins', sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+	}
 `
 
 export const theme = {

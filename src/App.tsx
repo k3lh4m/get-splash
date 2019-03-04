@@ -2,6 +2,7 @@ import React                     from 'react';
 import styled, { ThemeProvider } from 'styled-components'
 import axios                     from 'axios';
 import { debounce }              from 'lodash';
+import buildUrl                  from 'build-url';
 
 import { theme, GlobalStyle }           from './theme/globalStyle'
 
@@ -15,7 +16,6 @@ import { unsplash_client }               from './const/unsplash.const';
 interface IProps {}
 
 const BodyWrapper = styled.div`
-	padding: 1rem;
 	min-height: 225px;
 	position: relative;
 `
@@ -27,6 +27,7 @@ interface IState {
 	resultsPerPage: number;
 	updatingCounter: boolean;
 	isSearchState: boolean;
+	searchQuery: string;
 }
 
 class App extends React.Component<IProps, IState> {
@@ -41,11 +42,13 @@ class App extends React.Component<IProps, IState> {
 			resultsPerPage: 0,
 			updatingCounter: false,
 			isSearchState: false,
+			searchQuery: '',
 		}
 
 		this.getPhotos = debounce(this.getPhotos.bind(this), 1000);
-		this.goToUnsplash = this.goToUnsplash.bind(this);
-		this.triggerSearchView = this.triggerSearchView.bind(this);
+		this.getQueryPhotos = this.getQueryPhotos.bind(this);
+		this.triggerSearchState = this.triggerSearchState.bind(this);
+		this.setQueryString = this.setQueryString.bind(this);
 		this.updateResultsPerPage = this.updateResultsPerPage.bind(this);
 		this.getLabelLabel = this.getLabelLabel.bind(this);
 		this.copyImageLinkToClipboard = this.copyImageLinkToClipboard.bind(this);
@@ -61,7 +64,7 @@ class App extends React.Component<IProps, IState> {
 		const searchButton: IButtonConfig = {
 			label: 'Search Photos',
 			type: 'secondary',
-			action: this.goToUnsplash,
+			action: this.triggerSearchState,
 		}
 		
 		return (
@@ -71,6 +74,10 @@ class App extends React.Component<IProps, IState> {
 						<GSHeader 
 							appName="Get Splash" 
 							actionsConfig={labelLink}
+							searchConfig={searchButton}
+							isLoading={this.state.loadingPhotos}
+							isSearchState={this.state.isSearchState}
+							getQueryPhotos={this.getQueryPhotos}
 						/>
 
 						<BodyWrapper>
@@ -96,14 +103,51 @@ class App extends React.Component<IProps, IState> {
 		);
 	}
 
-	protected getPhotos() {
+	protected getQueryPhotos(searchQuery: string) {
+		const urlString: string = buildUrl('https://api.unsplash.com/', {
+			path: 'search/photos',
+			queryParams: {
+				client_id: unsplash_client,
+				per_page: '8',
+				query: searchQuery
+			}
+		});
 
 		this.setState({
 			loadingPhotos: true,
 			isWelcomeActive: false,
 			updatingCounter: false,
 		}, () => {
-			axios.get(`https://api.unsplash.com/photos/?client_id=${unsplash_client}&per_page=${this.state.resultsPerPage}`)
+			axios.get(urlString)
+				.then((data: any) => {
+					const photos = data.data.results;
+
+					this.setState({
+						photos,
+						loadingPhotos: false,
+					})
+				})
+				.catch((err) => {
+					console.log(err)
+				})
+		})
+	}
+
+	protected getPhotos() {	
+		const urlString = buildUrl('https://api.unsplash.com/', {
+				path: 'photos',
+				queryParams: {
+					client_id: unsplash_client,
+					per_page: `${this.state.resultsPerPage}`,
+				}
+		});
+
+		this.setState({
+			loadingPhotos: true,
+			isWelcomeActive: false,
+			updatingCounter: false,
+		}, () => {
+			axios.get(urlString)
 				.then((data) => {
 					const photos: IUnsplahPhotos[] = data.data;
 
@@ -118,14 +162,18 @@ class App extends React.Component<IProps, IState> {
 		})
 	}
 
-	protected goToUnsplash(): void {
+	protected triggerSearchState(): void {
 		this.setState({
-			isSearchState: true,
+			isSearchState: !this.state.isSearchState,
 		})
 	}
 
-	protected triggerSearchView(): void {
-		console.log('trigger search');
+	protected setQueryString(queryString: string): void {
+		const searchQuery = queryString;
+
+		this.setState({
+			searchQuery,
+		})
 	}
 
 	protected updateResultsPerPage(): void {
@@ -144,7 +192,7 @@ class App extends React.Component<IProps, IState> {
 			!this.state.loadingPhotos &&
 			this.state.photos.length 
 		) {
-			return `Loaded ${this.state.resultsPerPage} Photos`
+			return `Loaded ${this.state.photos.length} Photos`
 		}
 
 		if (
