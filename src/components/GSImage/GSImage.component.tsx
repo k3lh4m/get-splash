@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { GSSmallButton, GSAuthor } from './../index';
+
 import { IUnsplashUrls, IUnsplashUser } from '../../interfaces';
-import GSAuthor from '../GSAuthor/GSAuthor.component';
-import GSSmallButton from '../GSSmallButton/GSSmallButton.component';
 
 interface IProps {
 	imageUrl: IUnsplashUrls; 
@@ -59,12 +59,12 @@ const GSImageHidden = styled.img`
 	opacity: 0;
 `
 
-const GSImage: React.SFC<IProps> = (props) => {
+export const GSImage: React.StatelessComponent<IProps> = (props) => {
 
 	return (
 		<GSImageContainer backgroundImage={props.imageUrl.small}>
 			<GSImageAuthorContainer>
-				<GSAuthor 
+				<GSAuthor
 					userImageURL={props.imageUser.profile_image.small} 
 					userTitle={props.imageUser.name}
 				/>
@@ -80,5 +80,3 @@ const GSImage: React.SFC<IProps> = (props) => {
 		</GSImageContainer>
 	)
 }
-
-export default GSImage;

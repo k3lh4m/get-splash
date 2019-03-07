@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 
-import GSLogo from './../GSLogo/GSLogo.component';
-import GSButton from '../GSButton/GSButton.component';
 import { IButtonConfig } from '../../interfaces';
-import SearchUnsplashFormik from '../SearchUnsplashFormik/SearchUnsplashFormik.component';
+import { GSLogo, GSButton, SearchUnsplashFormik} from '../index';
 
 interface IProps {
 	appName: string;

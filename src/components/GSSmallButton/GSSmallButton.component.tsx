@@ -27,12 +27,10 @@ const GSButtonSmall = styled.button`
 `
 
 
-const GSSmallButton: React.SFC<IProps> = (props) => {
+export const GSSmallButton: React.StatelessComponent<IProps> = (props) => {
 	return (
 		<GSButtonSmall onClick={props.action}>
 			{props.label}
 		</GSButtonSmall>
 	)
 }
-
-export default GSSmallButton

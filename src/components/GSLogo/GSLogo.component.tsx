@@ -12,10 +12,8 @@ const GSLogoTitle = styled.h1`
 	margin 0;
 `
 
-const GSLogo: React.SFC<IProps> = (props) => {
+export const GSLogo: React.SFC<IProps> = (props) => {
 	return (
 		<GSLogoTitle>{props.appName}</GSLogoTitle>
 	)
 }
-
-export default GSLogo

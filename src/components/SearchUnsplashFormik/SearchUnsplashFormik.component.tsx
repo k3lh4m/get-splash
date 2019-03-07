@@ -1,8 +1,8 @@
 import React from 'react';
-import { Formik, Field, Form, FormikActions } from 'formik';
+import { Formik, Form } from 'formik';
 
-import GSInput from '../GSInput/GSInput.component';
-import { GSButtonActionSearch } from './../shared/GSSearchButton/GSSearchButton.component';
+import { GSInput } from './../index';
+import { GSButtonActionSearch } from './../shared';
 
 import { ArrowRightAlt, Clear } from '@material-ui/icons';
 
@@ -19,14 +19,8 @@ interface IProps {
 	onSubmit(values: any): void;
 }
 
-const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
+export const SearchUnsplashFormik: React.StatelessComponent<IProps> = (props: IProps) => {
 
-	console.log(props);
-
-	const openRecentSearches = () => {
-	
-	}
-	
 	return (
 		<React.Fragment>
 			<Formik 
@@ -94,5 +88,3 @@ const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
 		</React.Fragment>
 	)
 };
-
-export default SearchUnsplashFormik;

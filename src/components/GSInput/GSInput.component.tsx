@@ -27,7 +27,7 @@ const Input = styled.input`
 	}
 `
 
-const GSInput: React.StatelessComponent<IProps> = (props) => {
+export const GSInput: React.StatelessComponent<IProps> = (props) => {
 	return (
 		<Input 
 			placeholder={props.placeholder}
@@ -40,5 +40,3 @@ const GSInput: React.StatelessComponent<IProps> = (props) => {
 		/>
 	)
 }
-
-export default GSInput;

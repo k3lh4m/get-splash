@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Pill from '../shared/Pill/pill.component';
-import ParapgraphTitle from '../shared/ParagraphTitle/ParagraphTitle.component';
-import ParagraphContent from '../shared/ParagraphContent/ParagraphContent.component';
+
+import { ParapgraphTitle, ParagraphContent, Pill } from '../shared';
 
 const RecentSearchContainer = styled.div`
 	background-color: rgba(255, 255, 255, 0.95);
@@ -27,7 +26,7 @@ interface IProps {
 	setSearchQuery(value: string): void;
 }
 
-const GSRecentSearches: React.StatelessComponent<IProps> = (props) => {
+export const GSRecentSearches: React.StatelessComponent<IProps> = (props) => {
 	return (
 		<RecentSearchContainer>
 			<ParapgraphTitle>Your Recent Searches</ParapgraphTitle>
@@ -53,5 +52,3 @@ const GSRecentSearches: React.StatelessComponent<IProps> = (props) => {
 		</RecentSearchContainer>
 	)
 }
-
-export default GSRecentSearches;

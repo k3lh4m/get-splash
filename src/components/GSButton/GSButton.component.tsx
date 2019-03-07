@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components';
 
-import { Search, ArrowRight } from '@material-ui/icons';
+import { Search } from '@material-ui/icons';
 
-
-import { GSButtonActionSearch } from './../shared/GSSearchButton/GSSearchButton.component';
+import { GSButtonActionSearch } from './../shared';
 
 interface IProps {
 	type: string;
@@ -45,7 +44,7 @@ const GSButtonActionSecondary = styled.button`
 	}
 `
 
-const GSButton: React.SFC<IProps> = (props) => {
+export const GSButton: React.StatelessComponent<IProps> = (props) => {
 
 	return (
 		<React.Fragment>
@@ -73,5 +72,3 @@ const GSButton: React.SFC<IProps> = (props) => {
 		</React.Fragment>
 	)
 }
-
-export default GSButton;

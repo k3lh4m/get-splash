@@ -36,7 +36,7 @@ interface IProps {
 	onClick(value: string): void;
 }
 
-const Pill: React.StatelessComponent<IProps> = (props) => {
+export const Pill: React.StatelessComponent<IProps> = (props) => {
 	return (
 		<PillContainer>
 			<ButtonPill onClick={() => { props.onClick(props.label) }} />
@@ -44,5 +44,3 @@ const Pill: React.StatelessComponent<IProps> = (props) => {
 		</PillContainer>
 	)
 }
-
-export default Pill;

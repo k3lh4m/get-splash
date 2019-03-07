@@ -45,7 +45,7 @@ const GSAuthorName = styled.div`
 	z-index: 1;
 `
 
-const GSAuthor: React.SFC<IProps> = (props: IProps) => {
+export const GSAuthor: React.StatelessComponent<IProps> = (props: IProps) => {
 	return (
 		<GSAuthorContainer>
 			<GSAuthorImage backgroundImage={props.userImageURL} />
@@ -55,5 +55,3 @@ const GSAuthor: React.SFC<IProps> = (props: IProps) => {
 		</GSAuthorContainer>
 	)
 }
-
-export default GSAuthor;

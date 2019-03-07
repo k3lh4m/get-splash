@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IUnsplahPhotos } from '../../interfaces';
-import GSImage from '../GSImage/GSImage.component';
+import { GSImage } from './../index';
 
 import Slider from "react-slick";
 
@@ -23,7 +23,7 @@ const SlickSliderWrapper = styled.div`
 	
 `
 
-const GSImageList: React.SFC<IProps> = (props) => {
+export const GSImageList: React.StatelessComponent<IProps> = (props) => {
 
 	var settings = {
 		accessibility: true,
@@ -59,5 +59,3 @@ const GSImageList: React.SFC<IProps> = (props) => {
 		</React.Fragment>
 	)
 }
-
-export default GSImageList

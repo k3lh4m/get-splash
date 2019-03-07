@@ -1,15 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import GSWelcome from '../GSWelcome/GSWelcome.component';
-import GSButton from '../GSButton/GSButton.component';
+import { GSButton, GSImage, GSImageList, GSRecentSearches, GSWelcome } from './../index';
+import { ParapgraphTitle, ParagraphContent } from '../shared';
 
 import { IButtonConfig, IUnsplahPhotos } from './../../interfaces'
-import GSImageList from '../GSImageList/GSImageList.component';
-import GSImage from '../GSImage/GSImage.component';
-import GSRecentSearches from '../GSRecentSearches/GSRecentSearches.component';
-import ParapgraphTitle from '../shared/ParagraphTitle/ParagraphTitle.component';
-import ParagraphContent from '../shared/ParagraphContent/ParagraphContent.component';
 
 interface IProps {
 	isWelcomeActive: boolean;
