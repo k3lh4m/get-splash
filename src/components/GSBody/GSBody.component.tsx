@@ -8,7 +8,8 @@ import { IButtonConfig, IUnsplahPhotos } from './../../interfaces'
 import GSImageList from '../GSImageList/GSImageList.component';
 import GSImage from '../GSImage/GSImage.component';
 import GSRecentSearches from '../GSRecentSearches/GSRecentSearches.component';
-import WelcomeMessageTitle from '../shared/WelcomeMessageTitle/WelcomeMessageTitle.component';
+import ParapgraphTitle from '../shared/ParagraphTitle/ParagraphTitle.component';
+import ParagraphContent from '../shared/ParagraphContent/ParagraphContent.component';
 
 interface IProps {
 	isWelcomeActive: boolean;
@@ -20,10 +21,6 @@ interface IProps {
 	setSearchQuery(value: string): void;
 	copyImageUrlAction(val: string): void;
 }
-
-const WelcomeMessageContent = styled.p`
-	font-size: 14px;
-`
 
 const ButtonWrapper = styled.div`
 	display: flex;
@@ -41,9 +38,9 @@ const GSBody: React.StatelessComponent<IProps> = (props) => {
 			{
 				props.isWelcomeActive ? (
 					<GSWelcome>
-						<WelcomeMessageTitle>Welcome to GetSplashed</WelcomeMessageTitle>
-						<WelcomeMessageContent>GetSplashed is a small extension that allows you to grab a few UnSplash images directly in your browser, without going directly to the site. </WelcomeMessageContent>
-						<WelcomeMessageContent>Authors are always credited and you are able to download or copy the photo directly to you clipboard.</WelcomeMessageContent>
+						<ParapgraphTitle>Welcome to GetSplashed</ParapgraphTitle>
+						<ParagraphContent>GetSplashed is a small extension that allows you to grab a few UnSplash images directly in your browser, without going directly to the site. </ParagraphContent>
+						<ParagraphContent>Authors are always credited and you are able to download or copy the photo directly to you clipboard.</ParagraphContent>
 						
 						<ButtonWrapper>
 							<GSButton 
