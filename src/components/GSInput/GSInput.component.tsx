@@ -6,7 +6,10 @@ interface IProps {
 	placeholder: string;
 	name: string;
 	autocomplete: boolean;
+	value: string;
 	onChange(event: any): void;
+	onFocus?(toggleValue: boolean): void;
+	onBlur?(toggleValue: boolean): void;
 }
 
 const Input = styled.input`
@@ -30,8 +33,10 @@ const GSInput: React.StatelessComponent<IProps> = (props) => {
 			placeholder={props.placeholder}
 			type={props.type}
 			name={props.name}
+			value={props.value}
 			autoComplete={ props.autocomplete ? 'on' : 'off'}
 			onChange={props.onChange}
+			onFocus={() => { props.onFocus(true)} }
 		/>
 	)
 }

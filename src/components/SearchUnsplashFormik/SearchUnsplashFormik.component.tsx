@@ -12,21 +12,29 @@ interface IFromInterface {
 
 interface IProps {
 	isLoading: boolean;
-	toggleSearch(): void;
+	currentSearchQuery: string;
+	setQueryString(queryString: string): void;
+	toggleRecentSearches(toggleValue: boolean): void;
+	toggleSearchView(toggleValue: boolean): void;
 	onSubmit(values: any): void;
 }
 
 const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
+
+	console.log(props);
+
+	const openRecentSearches = () => {
+	
+	}
+	
 	return (
 		<React.Fragment>
 			<Formik 
 				initialValues={{
-					searchQuery: '',
+					searchQuery: props.currentSearchQuery
 				}}
-				onSubmit={(values: IFromInterface, { setSubmitting }: FormikActions<IFromInterface>) => {
-					console.log(values.searchQuery)
-
-					props.onSubmit(values.searchQuery);
+				onSubmit={() => {
+					props.onSubmit(props.currentSearchQuery);
 				}}
 				render={({
 					values,
@@ -55,8 +63,11 @@ const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
 								type="text" 
 								name="searchQuery"
 								placeholder="Search Unsplash"
+								value={props.currentSearchQuery}
 								autocomplete={false}
-								onChange={inputProps.handleChange}
+								onChange={props.setQueryString}
+								onFocus={props.toggleRecentSearches}
+								onBlur={props.toggleRecentSearches}
 							/>
 
 							<GSButtonActionSearch 
@@ -72,7 +83,7 @@ const SearchUnsplashFormik: React.SFC<IProps> = (props: IProps) => {
 								type="button" 
 								spacer={10} 
 								active={false}
-								onClick={props.toggleSearch}
+								onClick={() => { props.toggleSearchView(false)}}
 							>
 								<Clear />
 							</GSButtonActionSearch>

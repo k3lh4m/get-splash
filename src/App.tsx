@@ -12,6 +12,7 @@ import LoadingSpinner       from './components/LoadingSpinner/LoadingSpinner.com
 
 import { IUnsplahPhotos, IButtonConfig } from './interfaces';
 import { unsplash_client }               from './const/unsplash.const';
+import { hasLocalStorageKey, addRecentSearchesToLocalStorageKey } from './components/shared/local-storage.ts/local-storage';
 
 interface IProps {}
 
@@ -26,8 +27,10 @@ interface IState {
 	photos: IUnsplahPhotos[];
 	resultsPerPage: number;
 	updatingCounter: boolean;
-	isSearchState: boolean;
+	isSearchStateActive: boolean;
 	searchQuery: string;
+	isRecentSearchActive: boolean;
+	previousSearchQueries: string[];
 }
 
 class App extends React.Component<IProps, IState> {
@@ -41,17 +44,32 @@ class App extends React.Component<IProps, IState> {
 			photos: [],
 			resultsPerPage: 0,
 			updatingCounter: false,
-			isSearchState: false,
+			isSearchStateActive: false,
 			searchQuery: '',
+			isRecentSearchActive: false,
+			previousSearchQueries: []
 		}
 
 		this.getPhotos = debounce(this.getPhotos.bind(this), 1000);
 		this.getQueryPhotos = this.getQueryPhotos.bind(this);
-		this.triggerSearchState = this.triggerSearchState.bind(this);
+		this.toggleSearchView = this.toggleSearchView.bind(this);
 		this.setQueryString = this.setQueryString.bind(this);
 		this.updateResultsPerPage = this.updateResultsPerPage.bind(this);
 		this.getLabelLabel = this.getLabelLabel.bind(this);
+		this.toggleRecentSearches = this.toggleRecentSearches.bind(this);
 		this.copyImageLinkToClipboard = this.copyImageLinkToClipboard.bind(this);
+		this.addRecentSearchesToLocalStorage = this.addRecentSearchesToLocalStorage.bind(this);
+	}
+
+	public componentDidMount() {
+		// Set recent searches if there is local storage associated
+		if (
+			hasLocalStorageKey('recentSearches') !== null
+		) {
+			this.setState({
+				previousSearchQueries: JSON.parse(hasLocalStorageKey('recentSearches')),
+			})
+		}
 	}
 
 	render() {
@@ -64,7 +82,7 @@ class App extends React.Component<IProps, IState> {
 		const searchButton: IButtonConfig = {
 			label: 'Search Photos',
 			type: 'secondary',
-			action: this.triggerSearchState,
+			action: this.toggleSearchView,
 		}
 		
 		return (
@@ -76,8 +94,12 @@ class App extends React.Component<IProps, IState> {
 							actionsConfig={labelLink}
 							searchConfig={searchButton}
 							isLoading={this.state.loadingPhotos}
-							isSearchState={this.state.isSearchState}
+							isSearchStateActive={this.state.isSearchStateActive}
+							currentSearchQuery={this.state.searchQuery}
+							toggleRecentSearches={this.toggleRecentSearches}
+							toggleSearchView={this.toggleSearchView}
 							getQueryPhotos={this.getQueryPhotos}
+							setQueryString={this.setQueryString}
 						/>
 
 						<BodyWrapper>
@@ -88,9 +110,12 @@ class App extends React.Component<IProps, IState> {
 									<GSBody
 										images={this.state.photos}
 										isWelcomeActive={this.state.isWelcomeActive}
+										isRecentSearchActive={this.state.isRecentSearchActive}
+										previousSearches={this.state.previousSearchQueries}
 										getPhotosButton={labelLink}
 										showSearchButton={searchButton}
 										copyImageUrlAction={this.copyImageLinkToClipboard}
+										setSearchQuery={this.setQueryString}
 									/>
 								)
 							}
@@ -121,10 +146,17 @@ class App extends React.Component<IProps, IState> {
 			axios.get(urlString)
 				.then((data: any) => {
 					const photos = data.data.results;
+					
+					const previousSearchQueries = this.state.previousSearchQueries;
+					previousSearchQueries.push(searchQuery);
 
 					this.setState({
 						photos,
 						loadingPhotos: false,
+						isRecentSearchActive: false,
+						previousSearchQueries
+					}, () => {
+						addRecentSearchesToLocalStorageKey('recentSearches', this.state.previousSearchQueries);
 					})
 				})
 				.catch((err) => {
@@ -155,6 +187,8 @@ class App extends React.Component<IProps, IState> {
 						photos,
 						loadingPhotos: false,
 					})
+
+					this.addRecentSearchesToLocalStorage();
 				})
 				.catch((err) => {
 					console.log(err)
@@ -162,18 +196,52 @@ class App extends React.Component<IProps, IState> {
 		})
 	}
 
-	protected triggerSearchState(): void {
-		this.setState({
-			isSearchState: !this.state.isSearchState,
-		})
+	protected toggleRecentSearches(toggleValue: boolean): void {
+		if (
+			toggleValue
+		) {
+			this.setState({
+				isRecentSearchActive: true,
+			})
+		} else {
+			this.setState({
+				isRecentSearchActive: false,
+			})
+		}
 	}
 
-	protected setQueryString(queryString: string): void {
-		const searchQuery = queryString;
 
-		this.setState({
-			searchQuery,
-		})
+	protected toggleSearchView(toggleValue: boolean): void {
+		if (
+			toggleValue
+		) {
+			this.setState({
+				isSearchStateActive: true,
+			})
+		} else {
+			this.setState({
+				isSearchStateActive: false,
+				isRecentSearchActive: false,
+			})
+		}
+	}
+
+	protected setQueryString(event: any): void {
+		if (
+			typeof event === 'string'
+		) {
+			const searchQuery = event;
+
+			this.setState({
+				searchQuery,
+			})
+		} else {
+			const searchQuery = event.target.value;
+
+			this.setState({
+				searchQuery,
+			})
+		}
 	}
 
 	protected updateResultsPerPage(): void {
@@ -224,6 +292,10 @@ class App extends React.Component<IProps, IState> {
 
 		document.execCommand('copy');
 		document.body.removeChild(selBox);
+	}
+
+	protected addRecentSearchesToLocalStorage() {
+		console.log(hasLocalStorageKey('test'));
 	}
 }
 

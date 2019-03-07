@@ -7,22 +7,19 @@ import GSButton from '../GSButton/GSButton.component';
 import { IButtonConfig, IUnsplahPhotos } from './../../interfaces'
 import GSImageList from '../GSImageList/GSImageList.component';
 import GSImage from '../GSImage/GSImage.component';
+import GSRecentSearches from '../GSRecentSearches/GSRecentSearches.component';
+import WelcomeMessageTitle from '../shared/WelcomeMessageTitle/WelcomeMessageTitle.component';
 
 interface IProps {
 	isWelcomeActive: boolean;
+	isRecentSearchActive: boolean;
 	images: IUnsplahPhotos[];
 	getPhotosButton: IButtonConfig;
 	showSearchButton: IButtonConfig;
+	previousSearches: string[];
+	setSearchQuery(value: string): void;
 	copyImageUrlAction(val: string): void;
 }
-
-
-
-const WelcomeMessageTitle = styled.h3`
-	font-size: 1.25rem;
-	font-weight: 500;
-	margin: 0 0 1rem 0;
-`
 
 const WelcomeMessageContent = styled.p`
 	font-size: 14px;
@@ -37,7 +34,7 @@ const ButtonWrapper = styled.div`
 	}
 `
 
-const GSBody: React.SFC<IProps> = (props) => {
+const GSBody: React.StatelessComponent<IProps> = (props) => {
 	
 	return (
 		<React.Fragment>
@@ -65,7 +62,6 @@ const GSBody: React.SFC<IProps> = (props) => {
 					</GSWelcome>
 				) : (
 					<React.Fragment>
-
 						{
 							props.images.length > 1 &&
 							<GSImageList
@@ -85,6 +81,14 @@ const GSBody: React.SFC<IProps> = (props) => {
 
 					</React.Fragment>
 				)
+			}
+
+			{
+				props.isRecentSearchActive && 
+				<GSRecentSearches 
+					previousSearches={props.previousSearches}
+					setSearchQuery={props.setSearchQuery}
+				/>
 			}
 		</React.Fragment>
 	)

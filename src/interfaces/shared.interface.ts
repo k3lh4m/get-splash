@@ -1,5 +1,5 @@
 export interface IButtonConfig {
 	type: string;
 	label: string;
-	action(): void;
+	action(value?: any): void;
 }

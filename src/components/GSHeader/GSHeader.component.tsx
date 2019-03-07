@@ -8,10 +8,14 @@ import SearchUnsplashFormik from '../SearchUnsplashFormik/SearchUnsplashFormik.c
 
 interface IProps {
 	appName: string;
-	isSearchState: boolean;
+	isSearchStateActive: boolean;
 	actionsConfig: IButtonConfig;
 	searchConfig: IButtonConfig;
 	isLoading: boolean;
+	currentSearchQuery: string;
+	setQueryString(queryString: string): void
+	toggleRecentSearches(toggleValue: boolean): void;
+	toggleSearchView(toggleValue: boolean): void;
 	getQueryPhotos(searchQuery: string): void;
 }
 
@@ -35,17 +39,21 @@ const GSButtonContainer = styled('div')<{ spacer: number, minHeight: number; }>`
 `
 
 const GSHeader: React.SFC<IProps> = (props) => {
+
 	return (
 		<GSHeaderContainer>
 			<GSLogo appName={props.appName} />
 
 			<GSButtonContainer minHeight={49} spacer={10}>
 				{
-					props.isSearchState ?
+					props.isSearchStateActive ?
 						<React.Fragment>
 							<SearchUnsplashFormik 
 								isLoading={props.isLoading}
-								toggleSearch={props.searchConfig.action}
+								currentSearchQuery={props.currentSearchQuery}
+								toggleSearchView={props.searchConfig.action}
+								setQueryString={props.setQueryString}
+								toggleRecentSearches={props.toggleRecentSearches}
 								onSubmit={props.getQueryPhotos}
 							/>
 						</React.Fragment>
