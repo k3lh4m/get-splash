@@ -58,7 +58,6 @@ class App extends React.Component<IProps, IState> {
 		this.getLabelLabel = this.getLabelLabel.bind(this);
 		this.toggleRecentSearches = this.toggleRecentSearches.bind(this);
 		this.copyImageLinkToClipboard = this.copyImageLinkToClipboard.bind(this);
-		this.addRecentSearchesToLocalStorage = this.addRecentSearchesToLocalStorage.bind(this);
 	}
 
 	public componentDidMount() {
@@ -187,8 +186,6 @@ class App extends React.Component<IProps, IState> {
 						photos,
 						loadingPhotos: false,
 					})
-
-					this.addRecentSearchesToLocalStorage();
 				})
 				.catch((err) => {
 					console.log(err)
@@ -292,10 +289,6 @@ class App extends React.Component<IProps, IState> {
 
 		document.execCommand('copy');
 		document.body.removeChild(selBox);
-	}
-
-	protected addRecentSearchesToLocalStorage() {
-		console.log(hasLocalStorageKey('test'));
 	}
 }
 
